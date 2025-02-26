@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())   // csrf 보안 기능 비활성화
                 .authorizeHttpRequests(auth -> auth     // 요청 권한 설정
                         .requestMatchers("/", "/signup", "/login", "/api/auth/**").permitAll() // .requestMatchers("경로") : 특정 URL에 대한 접근 권한 설정, permitAll() : 누구나 접근 가능
+                        .requestMatchers("/dashboard").hasRole("USER")  // 사용자 접근 가능
+                        .requestMatchers("/admin").hasRole("ADMIN")  // 관리자만 접근 가능
                         .anyRequest().authenticated()   // 위에서 허용한 것 제외한 모든 요청은 로그인 필요
                 )
                 .formLogin(form -> form

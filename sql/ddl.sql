@@ -4,3 +4,5 @@ CREATE TABLE jwt_users (
     password VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'ROLE_USER'
 );
+
+UPDATE jwt_users SET role = 'ROLE_ADMIN' WHERE id = 3;

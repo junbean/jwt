@@ -24,9 +24,11 @@ public class UserService implements  UserDetailsService {
     }
 
     public void registerUser(String email, String password) {
+        // 이메일 중복 검사
         validateDuplicateEmail(email);
+
         String encodedPassword = passwordEncoder.encode(password);      // 비밀번호 보안
-        User user = new User(email, encodedPassword);
+        User user = new User(email, encodedPassword, "ROLE_USER");
         userRepository.save(user);
     }
 
