@@ -1,5 +1,7 @@
 package practice.jwt.restcontroller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +36,8 @@ public class AuthRestController {
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @RequestParam(name="email") String email,
-            @RequestParam(name="password") String password
+            @RequestParam(name="password") String password,
+            HttpServletResponse response
     ) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
@@ -44,6 +47,32 @@ public class AuthRestController {
         User user = userRepository.findByEmail(email).orElseThrow();
         String token = jwtUtil.generateToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        // 🔹 JWT를 HttpOnly 쿠키에 저장
+        Cookie cookie = new Cookie("JWT", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // HTTPS에서만 사용 (개발 시 false로 변경)
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60); // 1시간
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok("로그인 성공!");
+
+        //return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // JWT 쿠키 삭제
+        Cookie cookie = new Cookie("JWT", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok("로그아웃 성공!");
     }
 }

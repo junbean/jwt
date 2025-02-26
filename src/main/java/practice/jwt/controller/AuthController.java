@@ -15,6 +15,11 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @GetMapping("/login")
+    public String loginForm() {
+        return "login";
+    }
+
     @GetMapping("/signup")
     public String signupForm() {
         return "signup";

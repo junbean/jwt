@@ -28,4 +28,16 @@
       3. 검증 성공 시 JwtUtil.generateToken(user)를 호출하여 JWT 발급
       4. 클라이언트가 JWT를 로컬스토리지 or 세션스토리지에 저장
       5. 로그인 완료 후, JWT를 사용하여 보호된 페이지(/dashboard)에 접근 가능
-3. 
+
+
+<br>
+<hr>
+<br>
+
+## 각 파일 역할 기능 정리
+
+### Controller 계층
+- AuthController
+   - 사용자가 회원가입 페이지(`/signup`)를 방문하면 폼을 보여줌
+   - 사용자가 회원가입을 제출하면 `UserService`를 통해 계정을 저장
+- HomeController
