@@ -58,6 +58,19 @@ public class UserService implements  UserDetailsService {
         userRepository.deleteById(userId);
     }
 
+    public boolean changePassword(String email, String currentPassword, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다"));
+                
+        // 기존 비밀번호 검증
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -70,6 +83,10 @@ public class UserService implements  UserDetailsService {
         );
     }
 
+    public void validateExistEmail(String email) {
+        userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다"));
+    }
 
     public void validateDuplicateEmail(String email) {
         userRepository.findByEmail(email)

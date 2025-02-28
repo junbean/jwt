@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Header</title>
+</head>
+<body>
+    <nav>
+        <a href="/">홈</a>
+        <a href="/dashboard">대시보드</a>
+
+        <!-- 🔹 로그인한 경우 사용자 정보 표시 -->
+        <span th:if="${userEmail}">
+                <span th:text="${userEmail}"></span> (<span th:text="${userRole}"></span>)
+                <form action="/logout" method="post" style="display:inline;">
+                    <button type="submit">로그아웃</button>
+                </form>
+            </span>
+
+        <!-- 🔹 로그인하지 않은 경우 로그인/회원가입 버튼 표시 -->
+        <span th:if="${userEmail == null}">
+                <a href="/login">로그인</a> | <a href="/signup">회원가입</a>
+            </span>
+    </nav>
+</body>
+</html>

@@ -62,7 +62,8 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);   // 로그인된 사용자 정보 저장
 
             // 역할 정보를 ThymeLeaf에서 사용할 수 있도록 request 속성으로 저장
-            request.setAttribute("role", role);
+            request.setAttribute("userEmail", email);
+            request.setAttribute("userRole", role);
         }
 
         // 필터는 여러 개 있을 수 있음

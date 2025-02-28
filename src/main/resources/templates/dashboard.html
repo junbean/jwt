@@ -4,12 +4,22 @@
         <title>대시보드</title>
     </head>
     <body>
+        <div th:replace="~{header.html}"></div> <!-- 헤더 포함 -->
+
         <h2>대시보드</h2>
 
         <p>환영합니다, 로그인된 사용자만 볼 수 있는 페이지입니다! 🎉</p>
 
+        <p>이메일 : <span th:text="${userEmail}"></span></p>
+        <p>현재 역할: <span th:text="${userRole}"></span></p>
+
         <form action="/logout" method="post">
             <button type="submit">로그아웃</button>
+        </form>
+
+
+        <form action="/user/change-password" method="get">
+            <button type="submit">비밀번호 변경</button>
         </form>
 
         <p><a href="/">홈으로 이동</a></p>
