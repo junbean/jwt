@@ -2,6 +2,7 @@ package practice.jwt.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,6 @@ import java.util.List;
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")   // ROLE_ADMIN을 가진 사용자만 접근 가능, SecurityContextHolder에서 현재 로그인한 사용자의 Role을 확인
 public class AdminController {
-    private final UserRepository userRepository;
     private final UserService userService;
 
     @GetMapping
@@ -30,15 +30,20 @@ public class AdminController {
     @GetMapping("/users")
     public String userList(Model model) {
         // 사용자의 목록을 리스트로 출력
-        List<User> users = userRepository.findAll();
+        List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "user-list";
     }
 
     @PostMapping("users/{id}/role")
     public String changeUserRole(@PathVariable Long id) {
-        // 특정 사용자의 권한을 변경
-        userService.toggleUserRole(id);
-        return "redirect:/admin/users";
+        userService.toggleUserRole(id);     // 특정 사용자의 권한을 변경
+        return "redirect:/admin/users";     // 변경 후 다시 목록 페이지로 이동
+    }
+
+    @PostMapping("users/{id}/delete")
+    public String deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin/users";     //삭제 후 다시 목록 페이지로 이동
     }
 }

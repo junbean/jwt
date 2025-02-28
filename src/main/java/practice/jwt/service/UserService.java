@@ -12,6 +12,7 @@ import practice.jwt.entity.User;
 import practice.jwt.repository.UserRepository;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,14 @@ public class UserService implements  UserDetailsService {
             user.setRole("ROLE_USER");
         }
         userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 
 
