@@ -1,5 +1,6 @@
 package practice.jwt.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,15 +14,18 @@ import practice.jwt.repository.UserRepository;
 import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements  UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /*
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+    */
 
     public void registerUser(String email, String password) {
         // 이메일 중복 검사
@@ -32,12 +36,19 @@ public class UserService implements  UserDetailsService {
         userRepository.save(user);
     }
 
-    public void validateDuplicateEmail(String email) {
-        userRepository.findByEmail(email)
-                .ifPresent(u -> {
-                    throw new IllegalStateException("이미 존재하는 회원입니다");
-                });
+    public void toggleUserRole(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        // 역할 토글 기능
+        if(user.getRole().equals("ROLE_USER")) {
+            user.setRole("ROLE_ADMIN");
+        } else {
+            user.setRole("ROLE_USER");
+        }
+        userRepository.save(user);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -48,5 +59,13 @@ public class UserService implements  UserDetailsService {
                 user.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority(user.getRole()))
         );
+    }
+
+
+    public void validateDuplicateEmail(String email) {
+        userRepository.findByEmail(email)
+                .ifPresent(u -> {
+                    throw new IllegalStateException("이미 존재하는 회원입니다");
+                });
     }
 }

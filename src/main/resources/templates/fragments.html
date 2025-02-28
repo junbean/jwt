@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="${title}">공통 레이아웃</title>
+    </head>
+    <body>
+        <nav>
+            <a href="/">홈</a>
+            <a href="/dashboard">대시보드</a>
+
+            <!-- 🔹 ROLE_ADMIN이면 관리자 메뉴 표시 -->
+            <span th:if="${#httpServletRequest.getAttribute('role') == 'ROLE_ADMIN'}">
+                <a href="/admin">관리자 페이지</a>
+            </span>
+
+            <form action="/logout" method="post" style="display:inline;">
+                <button type="submit">로그아웃</button>
+            </form>
+        </nav>
+
+        <div th:insert="~{::content}"></div>
+    </body>
+</html>

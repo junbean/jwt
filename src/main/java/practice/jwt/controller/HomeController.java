@@ -16,8 +16,10 @@ public class HomeController {
         return "dashboard";
     }
 
+    /* AdminController로 이관됨
     @GetMapping("/admin")
     public String admin() {
         return "admin";
     }
+    */
 }

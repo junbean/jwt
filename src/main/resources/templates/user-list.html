@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>사용자 목록</title>
+</head>
+<body>
+    <h2>사용자 목록</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>이메일</th>
+            <th>역할</th>
+            <th>권한 변경</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <form th:action="@{/admin/users/{id}/role(id=${user.id})}" method="post">
+                    <button type="submit">권한 변경</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
